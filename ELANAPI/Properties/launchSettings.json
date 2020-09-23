@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "playmusic?ipaddress=73.140.54.240&Service=Spotify&Room=Kitchen&Artist=Prince",
+      "launchUrl": "playmusic?ipaddress=73.140.54.240:9999&Service=Pandora&Room=Kitchen&Artist=Prince",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "ELANAPI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "playmusic?ipaddress=73.140.54.240&Service=Spotify&Room=Kitchen&Artist=Prince",
+      "launchUrl": "playmusic?ipaddress=73.140.54.240:9999&Service=Pandora&Room=Kitchen&Artist=Prince",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

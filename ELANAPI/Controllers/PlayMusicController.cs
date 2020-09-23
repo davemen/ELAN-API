@@ -28,13 +28,11 @@ namespace ELANAPI.Controllers
             mymusic.Room = Room;
             mymusic.Service = Service;
 
-            
-
-            await SendMessageToElan.InitializeElan(mymusic);
-
             if (mymusic.Service == "Pandora")
             {
-                await SendMessageToElan.SendMessagePandora(mymusic);
+                // await SendMessageToElan.InitializeElan(mymusic);
+                // await SendMessageToElan.SendMessagePandora(mymusic);
+                 string results = WebAPI.WebElanPandora(mymusic);
             }
             else
             {
