@@ -112,9 +112,7 @@ namespace ELANAPI
             {
                 WebElan(mymusic);
             }
-            //Play
-            results = ProcessWebGet("Play");
-
+            
             return "OK";
         }
 

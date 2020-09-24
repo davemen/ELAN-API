@@ -28,6 +28,10 @@ namespace ELANAPI.Controllers
             mymusic.Room = Room;
             mymusic.Service = Service;
 
+            //clean up the data
+            mymusic.Artist = char.ToUpper(mymusic.Artist[0]) + mymusic.Artist.Substring(1);
+
+
             if (mymusic.Service == "Pandora")
             {
                 // await SendMessageToElan.InitializeElan(mymusic);
