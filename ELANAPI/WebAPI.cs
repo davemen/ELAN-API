@@ -23,7 +23,7 @@ namespace ELANAPI
             ProcessWebPost(theCommand);
 
             // power the speaker on
-            ProcessWebPost("Power on");
+            ProcessWebPost("Power on " + mymusic.Room);
           
             //set the source to main
             theCommand = @"setsource ""Main""";
@@ -75,8 +75,10 @@ namespace ELANAPI
             return "OK";
         }
 
-        public static string WebElanPandora(PlayMusic mymusic)
+        public static async System.Threading.Tasks.Task<string> WebElanPandoraAsync(PlayMusic mymusic)
         {
+
+            await SendMessageToElan.InitializeElan(mymusic); 
 
             //initialize the web client
             theIPAddress = mymusic.IPAddress;

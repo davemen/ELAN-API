@@ -13,9 +13,18 @@ namespace ELANAPI
 
         public static async Task InitializeElan(PlayMusic myMusic)
         {
-            using (Client client2 = new Client(myMusic.IPAddress, 5006, new System.Threading.CancellationToken()))
+            String newIP = myMusic.IPAddress;
+            //check for a port
+            int index1 = myMusic.IPAddress.IndexOf(':');
+            if (index1 > 0)
             {
+                //remove the port
+                 newIP = myMusic.IPAddress.Substring(0, index1 );
+            }
 
+            using (Client client2 = new Client(newIP, 5006, new System.Threading.CancellationToken()))
+            {
+  
                 //set the room - Send the command via Telnet to the streamer
                 string theCommand = @"setzone """ + myMusic.Room + @"""";
                 await client2.WriteLine(theCommand);

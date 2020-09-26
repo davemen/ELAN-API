@@ -36,7 +36,7 @@ namespace ELANAPI.Controllers
             {
                 // await SendMessageToElan.InitializeElan(mymusic);
                 // await SendMessageToElan.SendMessagePandora(mymusic);
-                 string results = WebAPI.WebElanPandora(mymusic);
+                 string results = await WebAPI.WebElanPandoraAsync(mymusic);
             }
             else
             {
