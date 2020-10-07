@@ -2,13 +2,12 @@
 using RestSharp;
 using RestSharp.Extensions;
 using System;
-using System.Diagnostics;
 
 namespace ELANAPI
 {
     public class WebAPI
     {
-        static RestClient client;
+        //static RestClient client;
         static string theIPAddress;
         public static string WebElan(PlayMusic mymusic)
         {
@@ -17,7 +16,7 @@ namespace ELANAPI
             theIPAddress = mymusic.IPAddress;
 
             //send the request to the Rest Sharp IP address
-            client = new RestClient("http://" + theIPAddress + "/api");
+            //   client = new RestClient("http://" + theIPAddress + "/api");
 
             //set the room to play the music in
             string theCommand = @"setzone """ + mymusic.Room + @"""";
@@ -31,16 +30,17 @@ namespace ELANAPI
             ProcessWebPost(theCommand);
 
             //Set the instance to the Main player
-            ProcessWebGet("setInstance/Main");
+            ProcessWebPost("setInstance/Main");
 
             //clear the queue
-            ProcessWebGet("ClearNowPlaying");
+            ProcessWebPost("ClearNowPlaying");
 
             //clear the queue
-            ProcessWebGet("Stop");
+            ProcessWebPost("Stop");
 
             //send Search to Spotify
             Rootobject results = ProcessWebGet("searchforservice/spotify/'" + mymusic.Artist + "'");
+
             string ArtistGuid = results.browse.Items[0].Guid;
 
             //Pick Artists 
@@ -68,13 +68,13 @@ namespace ELANAPI
             results = ProcessWebGet(theCommand);
 
             //Shuffle
-            results = ProcessWebGet("Shuffle/true");
+            ProcessWebPost("Shuffle/true");
 
             //Play
-            results = ProcessWebGet("Play");
+            ProcessWebPost("Play");
 
             //Skip
-            results = ProcessWebGet("SkipNext");
+            ProcessWebPost("SkipNext");
 
             return "OK";
         }
@@ -88,7 +88,7 @@ namespace ELANAPI
             theIPAddress = mymusic.IPAddress;
 
             //send the request to the Rest Sharp IP address
-            client = new RestClient("http://" + theIPAddress + "/api");
+           // client = new RestClient("http://" + theIPAddress + "/api");
 
             //set the room to play the music in
             string theCommand = @"setzone """ + mymusic.Room + @"""";
@@ -102,13 +102,13 @@ namespace ELANAPI
             ProcessWebPost(theCommand);
 
             //Set the instance to the Main player
-            ProcessWebGet("setInstance/Main");
+            ProcessWebPost("setInstance/Main");
 
             //clear the queue
-            ProcessWebGet("ClearNowPlaying");
+            ProcessWebPost("ClearNowPlaying");
 
             //clear the queue
-            ProcessWebGet("Stop");
+            ProcessWebPost("Stop");
 
             //send Station to Pandora
             Rootobject results = ProcessWebGet("PlayRadioStation/" + mymusic.Artist + " Radio");
@@ -124,6 +124,9 @@ namespace ELANAPI
 
         private static string ProcessWebPost(string theMessage)
         {
+            //This is really a faux Post - it's a get that doesn't do a second call
+            // to get the results
+
             //this one calls the media streamer and passes in the message
             theMessage = theMessage.UrlEncode();
             RestClient client = new RestClient();
@@ -132,20 +135,12 @@ namespace ELANAPI
 
             IRestResponse myresponse = client.Execute(request);
 
-            //Get the results - you have to send a blank request in to get the results from the API Request
-            client.BaseUrl = new Uri("http://" + theIPAddress + "/api/");
-            RestRequest request2 = new RestRequest();
-
-            IRestResponse myresponse2 = client.Execute(request2);
-            Debug.WriteLine(myresponse2.Content);
-            return myresponse2.Content;
-
+            return "OK";
         }
 
         private static Rootobject ProcessWebGet(string theMessage)
         {
-
-            //this one calls the media streamer and passes in the message
+            ////this one calls the media streamer and passes in the message
             string clientString = "http://" + theIPAddress + "/api/" + theMessage;
             var client = new RestClient(clientString);
             client.Timeout = -1;
@@ -154,8 +149,8 @@ namespace ELANAPI
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content); ;
 
-
             //Get the results - you have to send a blank request in to get the results from the API Request
+
             RestClient client2 = new RestClient("http://" + theIPAddress + "/api/");
             client.Timeout = -1;
             RestRequest request2 = new RestRequest(Method.GET);
