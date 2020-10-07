@@ -10,8 +10,9 @@ namespace ELANAPI
     {
         static RestClient client;
         static string theIPAddress;
-        public static string WebElan(PlayMusic mymusic) { 
-        
+        public static string WebElan(PlayMusic mymusic)
+        {
+
             //initialize the web client
             theIPAddress = mymusic.IPAddress;
 
@@ -23,25 +24,28 @@ namespace ELANAPI
             ProcessWebPost(theCommand);
 
             // power the speaker on
-            ProcessWebPost("Power on " + mymusic.Room);
-          
+            ProcessWebPost("Power on");
+
             //set the source to main
             theCommand = @"setsource ""Main""";
             ProcessWebPost(theCommand);
-        
+
             //Set the instance to the Main player
             ProcessWebGet("setInstance/Main");
 
             //clear the queue
             ProcessWebGet("ClearNowPlaying");
 
+            //clear the queue
+            ProcessWebGet("Stop");
+
             //send Search to Spotify
-            Rootobject results = ProcessWebGet("searchforservice/spotify/'" + mymusic.Artist + "'" );
+            Rootobject results = ProcessWebGet("searchforservice/spotify/'" + mymusic.Artist + "'");
             string ArtistGuid = results.browse.Items[0].Guid;
 
             //Pick Artists 
             theCommand = "AckPickItem/" + ArtistGuid;
-            results = ProcessWebGet (theCommand);
+            results = ProcessWebGet(theCommand);
 
             //Pick first Artist
             ArtistGuid = results.browse.Items[0].Guid;
@@ -54,12 +58,12 @@ namespace ELANAPI
             results = ProcessWebGet(theCommand);
 
             //Pick PlayAll
-            string PlayAll = results.browse.Items[0].Guid; 
+            string PlayAll = results.browse.Items[0].Guid;
             theCommand = "AckPickItem/" + PlayAll;
             results = ProcessWebGet(theCommand);
 
             //PickPlayNow
-            string PlayNow = results.browse.Items[0].Guid; 
+            string PlayNow = results.browse.Items[0].Guid;
             theCommand = "AckPickItem/" + PlayNow;
             results = ProcessWebGet(theCommand);
 
@@ -78,7 +82,7 @@ namespace ELANAPI
         public static async System.Threading.Tasks.Task<string> WebElanPandoraAsync(PlayMusic mymusic)
         {
 
-            await SendMessageToElan.InitializeElan(mymusic); 
+            await SendMessageToElan.InitializeElan(mymusic);
 
             //initialize the web client
             theIPAddress = mymusic.IPAddress;
@@ -114,15 +118,15 @@ namespace ELANAPI
             {
                 WebElan(mymusic);
             }
-            
+
             return "OK";
         }
 
-            private static string ProcessWebPost(string theMessage)
+        private static string ProcessWebPost(string theMessage)
         {
             //this one calls the media streamer and passes in the message
             theMessage = theMessage.UrlEncode();
-            var client = new RestClient();
+            RestClient client = new RestClient();
             client.BaseUrl = new Uri("http://" + theIPAddress + "/api" + "/" + theMessage);
             var request = new RestRequest();
 
@@ -130,17 +134,17 @@ namespace ELANAPI
 
             //Get the results - you have to send a blank request in to get the results from the API Request
             client.BaseUrl = new Uri("http://" + theIPAddress + "/api/");
-            var request2 = new RestRequest();
+            RestRequest request2 = new RestRequest();
 
             IRestResponse myresponse2 = client.Execute(request2);
             Debug.WriteLine(myresponse2.Content);
             return myresponse2.Content;
-            
+
         }
 
         private static Rootobject ProcessWebGet(string theMessage)
         {
-            
+
             //this one calls the media streamer and passes in the message
             string clientString = "http://" + theIPAddress + "/api/" + theMessage;
             var client = new RestClient(clientString);
@@ -150,13 +154,14 @@ namespace ELANAPI
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content); ;
 
+
             //Get the results - you have to send a blank request in to get the results from the API Request
-            var client2 = new RestClient("http://" + theIPAddress + "/api/");
+            RestClient client2 = new RestClient("http://" + theIPAddress + "/api/");
             client.Timeout = -1;
-            var request2 = new RestRequest(Method.GET);
+            RestRequest request2 = new RestRequest(Method.GET);
             request2.AddHeader("Cookie", "clientId=5504ba32-149c-4bac-9ced-bc775684940d");
             IRestResponse response2 = client2.Execute(request2);
-            
+
             // deserialize the results and return them.
             Rootobject myresults = Newtonsoft.Json.JsonConvert.DeserializeObject<Rootobject>(response2.Content);
             return myresults;

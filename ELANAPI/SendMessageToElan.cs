@@ -19,12 +19,12 @@ namespace ELANAPI
             if (index1 > 0)
             {
                 //remove the port
-                 newIP = myMusic.IPAddress.Substring(0, index1 );
+                newIP = myMusic.IPAddress.Substring(0, index1);
             }
 
             using (Client client2 = new Client(newIP, 5006, new System.Threading.CancellationToken()))
             {
-  
+
                 //set the room - Send the command via Telnet to the streamer
                 string theCommand = @"setzone """ + myMusic.Room + @"""";
                 await client2.WriteLine(theCommand);
@@ -64,7 +64,7 @@ namespace ELANAPI
                 await client.WriteLine(theCommand);
 
                 //Play Pandora radio station
-                 theCommand = @"PlayRadioStation """ + myMusic.Artist + @" Radio""";
+                theCommand = @"PlayRadioStation """ + myMusic.Artist + @" Radio""";
                 await client.WriteLine(theCommand);
                 u = await client.TerminatedReadAsync("\r\n", TimeSpan.FromMilliseconds(800));
                 Debug.WriteLine(u);

@@ -54,11 +54,11 @@ namespace ELANAPI.Controllers
     public class StopController : ControllerBase
     {
 
-      //  private readonly ILogger<StopMusicController> _logger;
+        //  private readonly ILogger<StopMusicController> _logger;
 
         public StopController(ILogger<PlayMusicController> logger)
         {
-         //   _logger = (ILogger<StopMusicController>)logger;
+            //   _logger = (ILogger<StopMusicController>)logger;
         }
 
         [HttpGet]
